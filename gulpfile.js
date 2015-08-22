@@ -3,7 +3,7 @@ var coffee = require('gulp-coffee');
 var concat = require('gulp-concat');
 var shell = require('gulp-shell');
 
-var SRC = ['src/gen_maps.coffe', 'src/core.coffee', 'src/main.coffee', 'src/env.coffee', 'src/map.coffee', 'src/state.coffee'];
+var SRC = ['src/gen_maps.coffe', 'src/main.coffee', 'src/env.coffee', 'src/map.coffee', 'src/state.coffee'];
 
 gulp.task('coffee', ['maps'], function() {
 	return gulp.src(SRC)

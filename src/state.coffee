@@ -3,7 +3,7 @@ class State
 		@player = new Player()
 
 	frame: (ft) ->
-		@mvp = @player.makeMvp(@screen_w, @screen_h, 2.0)
+		@mvp = @player.makeMvp(@screen_w, @screen_h, 4.0)
 
 	loadMap: (name) ->
 		@map = new Map(name)
