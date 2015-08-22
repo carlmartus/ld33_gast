@@ -21,7 +21,7 @@ for name in MAPS:
     encoded = tagData.firstChild.nodeValue
     raw = zlib.decompress(base64.b64decode(encoded))
 
-    ids = [raw[i*4] for i in range(w*h)]
+    ids = [raw[i*4] - 1 for i in range(w*h)]
     out[name] = { 'grid': ids, 'w': w, 'h': h }
 
 fd = open(OUT, 'w')
