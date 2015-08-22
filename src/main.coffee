@@ -6,7 +6,7 @@ class Ld33
 		gl = esInitGl('gastvas', { antialias: false })
 		@w = 400
 		@h = 300
-		@mat = @makeMvp()
+		#@mat = @makeMvp()
 		esFullFrame('gastvas', (@w, @h) =>
 			gl.viewport(0, 0, @w, @h)
 		)
@@ -32,6 +32,7 @@ class Ld33
 
 
 main = ->
+	console.log(LEVELS)
 	new Ld33
 
 document.ld33 = main

@@ -25,6 +25,6 @@ for name in MAPS:
     out[name] = { 'grid': ids, 'w': w, 'h': h }
 
 fd = open(OUT, 'w')
-fd.write('LEVELS = %s' % str(out))
+fd.write("LEVELS = %s\n" % str(out))
 fd.close()
 
