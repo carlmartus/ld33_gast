@@ -31,11 +31,12 @@ varying vec2 va_uv;
 uniform sampler2D un_tex0;
 uniform vec2 un_lightPos;
 uniform vec3 un_lightCol;
+uniform float un_lightRad;
 varying vec2 va_loc;
 
 void main() {
 	vec4 col = texture2D(un_tex0, va_uv);
-	float dist = 1.0 - clamp(distance(va_loc, un_lightPos)*0.25, 0.0, 1.0);
+	float dist = 1.0 - clamp(distance(va_loc, un_lightPos)/un_lightRad, 0.0, 1.0);
 	//if (col == vec4(0, 1, 0, 1)) discard;
 	gl_FragColor = dist*col*vec4(un_lightCol, 1);
 }
@@ -85,6 +86,7 @@ class Map
 		@unifColorMvp = @programColor.getUniform('un_mvp')
 		@unifColorLightCol = @programColor.getUniform('un_lightCol')
 		@unifColorLightPos = @programColor.getUniform('un_lightPos')
+		@unifColorLightRad = @programColor.getUniform('un_lightRad')
 
 		@programEdge = new esProgram(gl)
 		@programEdge.addShaderText(GLSL_EDGE_VERT, ES_VERTEX)
@@ -147,17 +149,41 @@ class Map
 		@vbaEdgeCount = vertsEdge.length / 4
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertsEdge), gl.STATIC_DRAW)
 
-	render: (mvp) ->
-		@renderColors(mvp)
-		@renderEdges(mvp)
+	setMvp: (mvp) ->
+		@programColor.use()
+		gl.uniformMatrix4fv(@unifColorMvp, false, mvp);
+		@programEdge.use()
+		gl.uniformMatrix4fv(@unifEdgeMvp, false, mvp);
 
-	renderColors: (mvp) ->
+	renderLight: (light) ->
+		gl.enable(gl.STENCIL_TEST);
+
+		gl.stencilMask(0xff);
+		gl.clear(gl.STENCIL_BUFFER_BIT);
+
+		gl.enable(gl.TEXTURE_2D)
+		gl.colorMask(false, false, false, false);
+		gl.stencilFunc(gl.ALWAYS, 1, 0xff);
+		gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE)
+		@renderEdges(light)
+		gl.disable(gl.TEXTURE_2D)
+
+		gl.colorMask(true, true, true, true);
+		gl.stencilMask(0);
+		gl.stencilFunc(gl.EQUAL, 0, 0xff);
+		@renderColors(light)
+
+		gl.disable(gl.STENCIL_TEST);
+
+	renderColors: (light) ->
 		@programColor.use()
 
-		gl.uniformMatrix4fv(@unifColorMvp, false, mvp);
+		#gl.uniformMatrix4fv(@unifColorMvp, false, mvp);
 		gl.uniform1i(@unifColorTexture, 0)
-		gl.uniform3f(@unifColorLightCol, 1.0, 0.0, 0.0)
-		gl.uniform2f(@unifColorLightPos, 0.5, 0.5)
+
+		light.uniforms(@unifColorLightPos, @unifColorLightCol, @unifColorLightRad)
+		#gl.uniform3f(@unifColorLightCol, 1.0, 0.0, 0.0)
+		#gl.uniform2f(@unifColorLightPos, 0.5, 0.5)
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, @vbaColor)
 		gl.enableVertexAttribArray(0);
@@ -169,11 +195,12 @@ class Map
 		gl.disableVertexAttribArray(1);
 		gl.disableVertexAttribArray(0);
 
-	renderEdges: (mvp) ->
+	renderEdges: (light) ->
 		@programEdge.use()
 
-		gl.uniformMatrix4fv(@unifEdgeMvp, false, mvp);
-		gl.uniform2f(@unifEdgeLightPos, 0.5, 0.5)
+		#gl.uniformMatrix4fv(@unifEdgeMvp, false, mvp);
+		#gl.uniform2f(@unifEdgeLightPos, 4.5, 4.5)
+		light.uniforms(@unifEdgeLightPos, null)
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, @vbaEdge)
 		gl.enableVertexAttribArray(0);
@@ -228,6 +255,18 @@ class Floor
 		pushColorVert(arr, @x	, @y+1	, u0, v1)
 		pushColorVert(arr, @x+1	, @y+1	, u1, v1)
 		pushColorVert(arr, @x+1	, @y	, u1, v0)
+
+class Light
+	constructor: (@r, @g, @b, @radius) ->
+		@x = 0.5
+		@y = 0.5
+
+	setPosition: (@x, @y) ->
+
+	uniforms: (unifPos, unifCol, unifRad) ->
+		gl.uniform2f(unifPos, @x, @y) if unifPos
+		gl.uniform3f(unifCol, @r, @g, @b) if unifCol
+		gl.uniform1f(unifRad, @radius) if unifRad
 
 pushColorVert = (arr, x, y, u, v) -> pushVerts(arr, [x, y, u, v])
 pushEdgeVert = (arr, x, y, nX, nY) -> pushVerts(arr, [x, y, nX, nY])

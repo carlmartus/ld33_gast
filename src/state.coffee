@@ -1,6 +1,9 @@
 class State
 	constructor: ->
 		@player = new Player()
+		@lights = [new Light(0, 1, 1, 4.5), new Light(0.7, 0, 0, 1.3)]
+		@lights[0].setPosition(1.8, 1.4)
+		@lights[1].setPosition(1.8, 3.5)
 
 	frame: (ft) ->
 		@mvp = @player.makeMvp(@screen_w, @screen_h, 4.0)
@@ -9,7 +12,13 @@ class State
 		@map = new Map(name)
 
 	render: ->
-		@map.render(@mvp)
+		@map.setMvp(@mvp)
+
+		gl.enable(gl.BLEND)
+		gl.blendFunc(gl.ONE, gl.ONE)
+		for light in @lights
+			@map.renderLight(light)
+		gl.disable(gl.BLEND)
 
 	setScreenSize: (w, h) ->
 		@screen_w = w
