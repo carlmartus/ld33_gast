@@ -16,7 +16,7 @@ gulp.task('maps', shell.task(['media/maps.py']));
 
 gulp.task('watch', ['default'], function() {
 	gulp.watch(SRC, ['coffee']);
-	gulp.watch('media/*.tmx', ['maps', 'coffee']);
+	gulp.watch(['media/*.tmx', 'media/maps.py'], ['maps', 'coffee']);
 });
 
 gulp.task('default', [ 'maps', 'coffee' ]);

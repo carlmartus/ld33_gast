@@ -1,7 +1,8 @@
 class State
 	constructor: ->
 		@player = new Player()
-		@lights = [new Light(0, 1, 1, 4.5), new Light(0.7, 0, 0, 1.3)]
+		@player.setPosition(0.5, 3.0)
+		@lights = [new Light(0, 1, 1, 4.5), new Light(0.7, 0, 0, 4.3)]
 		@lights[0].setPosition(1.8, 1.4)
 		@lights[1].setPosition(1.8, 3.5)
 

@@ -74,6 +74,7 @@ class Map
 		@w = data.w
 		@h = data.h
 		@grid = data.grid
+		@objects = data.objects
 
 		# Shaders
 		@programColor = new esProgram(gl)
@@ -121,15 +122,21 @@ class Map
 
 			if id is TILE_FLOOR0
 				if not goodCoord(x-1, y)
-					@pushWall(x, y, 0, 1)
+					@pushGridWall(x, y, 0, 1)
 				if not goodCoord(x+1, y)
-					@pushWall(x+1, y, 0, 1)
+					@pushGridWall(x+1, y, 0, 1)
 				if not goodCoord(x, y-1)
-					@pushWall(x, y, 1, 0)
+					@pushGridWall(x, y, 1, 0)
 				if not goodCoord(x, y+1)
-					@pushWall(x, y+1, 1, 0)
+					@pushGridWall(x, y+1, 1, 0)
 			i++
-		console.log(@walls)
+
+		# Objects
+		for obj in @objects
+			if obj.type == 'pillar'
+				console.log(obj)
+				p = new Pillar(obj.cx, obj.cy, obj.w, obj.h)
+				p.pushWalls(@walls)
 
 		# Color vertices
 		@vbaColor = gl.createBuffer()
@@ -212,7 +219,7 @@ class Map
 		gl.disableVertexAttribArray(1);
 		gl.disableVertexAttribArray(0);
 
-	pushWall: (x, y, dx, dy) ->
+	pushGridWall: (x, y, dx, dy) ->
 		v0 = esVec2_parse(x, y)
 		v1 = esVec2_parse(x+dx, y+dy)
 		@walls.push(new Wall(v0, v1))
@@ -255,6 +262,33 @@ class Floor
 		pushColorVert(arr, @x	, @y+1	, u0, v1)
 		pushColorVert(arr, @x+1	, @y+1	, u1, v1)
 		pushColorVert(arr, @x+1	, @y	, u1, v0)
+
+class Pillar
+	constructor: (@cx, @cy, @w, @h) ->
+
+	vertsColor: (arr) ->
+		u0 = UVS[TILE_NONE].u
+		v0 = UVS[TILE_NONE].v
+		u1 = u0 + UV_INC
+		v1 = v0 + UV_INC
+		pushColorVert(arr, @cx-@w	, @cy-@h	, u0, v0)
+		pushColorVert(arr, @cx+@w	, @cy-@h	, u1, v0)
+		pushColorVert(arr, @cx-@w	, @cy+@h	, u0, v1)
+
+		pushColorVert(arr, @cx-@w	, @cy+@h	, u0, v1)
+		pushColorVert(arr, @cx+@w	, @cy+@h	, u1, v1)
+		pushColorVert(arr, @cx+@w	, @cy-@h	, u1, v0)
+
+	pushWalls: (arr) ->
+		v0 = esVec2_parse(@cx-@w, @cy-@h)
+		v1 = esVec2_parse(@cx+@w, @cy-@h)
+		v2 = esVec2_parse(@cx+@w, @cy+@h)
+		v3 = esVec2_parse(@cx-@w, @cy+@h)
+		console.log(@cx, @cy, @w, @h, v0, v1, v2, v3)
+		arr.push(new Wall(v0, v1))
+		arr.push(new Wall(v1, v2))
+		arr.push(new Wall(v2, v3))
+		arr.push(new Wall(v3, v0))
 
 class Light
 	constructor: (@r, @g, @b, @radius) ->
