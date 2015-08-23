@@ -1,7 +1,7 @@
 # Gast busters
 
 Part of the Ludum Dare 33 challange.
-![Gameplay screenshot](screenshot/screen1.jpg)
+![Gameplay screenshot](screenshot/screen1.png)
 
 ## Information
 
