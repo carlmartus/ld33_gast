@@ -1,5 +1,8 @@
 # Gast busters
 
+
+## Click here to [play](http://martus.se/ld33/gast/)
+
 Part of the Ludum Dare 33 challange.
 ![Gameplay screenshot](screenshot/screen1.png)
 
