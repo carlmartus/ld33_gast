@@ -2,6 +2,7 @@ ENT_RADIUS = 0.1
 PLAYER_HUNGE_MIN = 0.2
 PLAYER_HUNGE_MAX = 0.3
 PLAYER_ACTION_CD = 0.4
+AI_RANGE = 2.7
 
 class Entity
 	constructor: (@state) ->
@@ -34,14 +35,18 @@ class Ai extends Entity
 		if @consider <= 0.0
 			return @state.busted() if @scared
 
-			# Idle
+			# Idle or path
 			if @moving
 				@moving = false
-				@consider = 4.0
+				@consider = 2.0 * (1 + Math.random())
 			else
-				@walk(
-					@actionZone[0] + 0.6*Math.random(),
-					@actionZone[1] + 0.6*Math.random())
+				if @pathName and false
+					loc = @state.map.paths[@pathName].iterate()
+					@walk(@loc[0], @loc[1])
+				else
+					@walk(
+						@actionZone[0] + 0.6*Math.random() - 0.3,
+						@actionZone[1] + 0.6*Math.random() - 0.3)
 
 		if @scanning
 			if @scanCd <= 0.0
@@ -51,9 +56,11 @@ class Ai extends Entity
 					@loc[0] - @state.player.loc[0],
 					@loc[1] - @state.player.loc[1])
 				dot = lookDir[0]*@moveDir[0] + lookDir[1]*@moveDir[1]
+				range = esVec2_length(lookDir)
 				if (
 					@state.player.visible and
 					dot < 0.0 and
+					range < AI_RANGE and
 					@state.map.canSee(@loc, @state.player.loc))
 					return @panic(@state.player.loc[0], @state.player.loc[1])
 			else
@@ -64,6 +71,7 @@ class Ai extends Entity
 			@move(@moveDir[0]*ft*@moveSpeed, @moveDir[1]*ft*@moveSpeed)
 
 	#walkPath: (path) ->
+	setPathPurpose: (@pathName) ->
 
 	render: ->
 		@state.sprites.push(@loc[0], @loc[1], @lookV, ENT_RADIUS, SPRITE_MAN_IDLE)
@@ -205,5 +213,5 @@ class Player extends Entity
 	moveDown:	(p) -> @walkYP = p
 	moveLeft:	(p) -> @walkXN = p
 	moveRight:	(p) -> @walkXP = p
-	doAction:	(p) -> @action = p
+	doAction:	(p) -> #@action = p
 

@@ -13,6 +13,11 @@ class State
 		for ai in @map.ais
 			ai.frame(ft)
 
+		next = @map.getNextArea(@player.loc)
+		if next
+			console.log(next)
+			@loadMap(next)
+
 	loadMap: (name) =>
 		@mapName = name
 		@map.loadMap(name)

@@ -2,6 +2,11 @@ TILE_NONE = 0
 TILE_FLOOR0 = 1
 TILE_FLOOR1 = 2
 
+TILE_SIGN0 = 4
+TILE_SIGN1 = 5
+TILE_SIGN2 = 6
+TILE_SIGN3 = 7
+
 UV_DIM = 4
 UV_INC = (1/UV_DIM)
 
@@ -9,6 +14,10 @@ UVS = {}
 UVS[TILE_NONE] =	{ 'solid':true, 'u': 0/UV_DIM, 'v': 0/UV_DIM } # Nothing
 UVS[TILE_FLOOR0] =	{ 'solid':false, 'u': 1/UV_DIM, 'v': 0/UV_DIM } # Tiles
 UVS[TILE_FLOOR1] =	{ 'solid':false, 'u': 2/UV_DIM, 'v': 0/UV_DIM } # Concreet
+UVS[TILE_SIGN0] =	{ 'solid':false, 'u': 0/UV_DIM, 'v': 1/UV_DIM } # Sign
+UVS[TILE_SIGN1] =	{ 'solid':false, 'u': 1/UV_DIM, 'v': 1/UV_DIM }
+UVS[TILE_SIGN2] =	{ 'solid':false, 'u': 2/UV_DIM, 'v': 1/UV_DIM }
+UVS[TILE_SIGN3] =	{ 'solid':false, 'u': 3/UV_DIM, 'v': 1/UV_DIM }
 
 GLSL_COLOR_VERT = """#version 100
 precision mediump float;
@@ -141,6 +150,10 @@ class Map
 		# Objects
 		@lights = []
 		@ais = []
+		@paths = {}
+		@nextLevel = 'l0'
+		@nextArea0 = esVec2_parse(900, 900)
+		@nextArea1 = esVec2_parse(909, 909)
 		for obj in @objects
 			switch obj.type
 				when 'pillar'
@@ -160,11 +173,18 @@ class Map
 					light.setPosition(obj.cx, obj.cy)
 					@lights.push(light)
 				when 'path'
-					; #console.log(obj)
+					@paths[obj.name] = new Path(obj.path)
 				when 'man'
 					man = new Ai(@state)
 					man.setPosition(obj.cx, obj.cy)
+					man.setPathPurpose(obj.path) if obj.path
 					@ais.push(man)
+				when 'level'
+					@nextLevel = obj.name
+					@nextArea0[0] = obj.tx
+					@nextArea0[1] = obj.ty
+					@nextArea1[0] = obj.tx + obj.w
+					@nextArea1[1] = obj.ty + obj.h
 
 		# Color vertices
 		@vbaColor = gl.createBuffer()
@@ -183,6 +203,15 @@ class Map
 			wall.vertsEdge(vertsEdge)
 		@vbaEdgeCount = vertsEdge.length / 4
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertsEdge), gl.STATIC_DRAW)
+
+	getNextArea: (ve) ->
+		#console.log(ve, @nextArea0, @nextArea1)
+		if (
+			ve[0] > @nextArea0[0] and ve[1] > @nextArea0[1] and
+			ve[0] < @nextArea1[0] and ve[1] < @nextArea1[1])
+			return @nextLevel
+		else
+			return null
 
 	frame: (ft) ->
 		@time += ft*0.2
@@ -434,6 +463,17 @@ class Pillar
 		arr.push(new Wall(v1, v2))
 		arr.push(new Wall(v2, v3))
 		arr.push(new Wall(v3, v0))
+
+class Path
+	constructor: (@path) ->
+		console.log(@path)
+		@index = 0
+
+	iterate: ->
+		ret = esVec2_parse(@path[@index][0], @path[@index][1])
+		@index += 1
+		@index = 0 if @index >= @path.length
+		return ret
 
 class Light
 	constructor: (@r, @g, @b, @radius) ->

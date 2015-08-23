@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="13" tilewidth="8" tileheight="8" nextobjectid="28">
+ <tileset firstgid="1" source="tiles.tsx"/>
+ <layer name="Tile Layer 1" width="10" height="13">
+  <data encoding="base64" compression="zlib">
+   eJxjZmBgYIRiJhwYJMdMA3UwjE8dI5HmEcLMRJrHzECc+7CZS6w6YtxJyJ/IbmMFYjYgZgdiDhzmEjIPAPA0APE=
+  </data>
+ </layer>
+ <objectgroup color="#ff0004" name="Object Layer 1">
+  <object id="1" type="player" x="2.40909" y="2.93182" width="2.25" height="2.125">
+   <ellipse/>
+  </object>
+  <object id="10" type="man" x="36.8182" y="25.3636" width="1.27273" height="1.27273"/>
+  <object id="11" type="man" x="49.0909" y="25.2727" width="1.27273" height="1.27273"/>
+  <object id="20" type="man" x="49" y="60.5455" width="1.27273" height="1.27273"/>
+  <object id="21" type="man" x="38.6364" y="65.6364" width="1.27273" height="1.27273"/>
+  <object id="22" type="man" x="41" y="61.3636" width="1.27273" height="1.27273"/>
+ </objectgroup>
+ <objectgroup name="Object Layer 2">
+  <object id="2" type="pillar" x="31.2159" y="24.0795" width="2.375" height="13.5"/>
+  <object id="3" type="light" x="26.75" y="27.75" width="1.625" height="1.625">
+   <properties>
+    <property name="r" value="1"/>
+    <property name="radius" value="1.5"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object id="4" type="pillar" x="42.125" y="23.625" width="2.375" height="13.5"/>
+  <object id="5" type="light" x="37.5682" y="28.3864" width="1.625" height="1.625">
+   <properties>
+    <property name="g" value="1"/>
+    <property name="radius" value="1.5"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object id="6" type="pillar" x="54.3068" y="24.0795" width="2.375" height="13.5"/>
+  <object id="7" type="light" x="49.0227" y="28.6591" width="1.625" height="1.625">
+   <properties>
+    <property name="b" value="1"/>
+    <property name="radius" value="1.5"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object id="8" type="pillar" x="52.5455" y="56.5455" width="3.36364" height="3.18182"/>
+  <object id="9" type="light" x="49.3636" y="61.2727" width="1.18182" height="1.18182">
+   <ellipse/>
+  </object>
+  <object id="13" type="pillar" x="52.4545" y="64" width="3.36364" height="3.18182"/>
+  <object id="15" type="pillar" x="43.5455" y="56.8182" width="3.36364" height="3.18182"/>
+  <object id="16" type="pillar" x="43.4545" y="64.2727" width="3.36364" height="3.18182"/>
+  <object id="17" type="pillar" x="33" y="57.0909" width="3.36364" height="3.18182"/>
+  <object id="18" type="pillar" x="32.9091" y="64.5455" width="3.36364" height="3.18182"/>
+  <object id="19" type="light" x="38.8182" y="69.6364" width="1.18182" height="1.18182">
+   <ellipse/>
+  </object>
+  <object id="23" type="light" x="35.7273" y="90.6364" width="1.18182" height="1.18182">
+   <properties>
+    <property name="b" value="1"/>
+    <property name="g" value="1"/>
+    <property name="r" value="1"/>
+    <property name="radius" value="10"/>
+   </properties>
+   <ellipse/>
+  </object>
+  <object id="24" type="pillar" x="37.3636" y="18.625" width="12" height="1.28409"/>
+  <object id="25" type="pillar" x="27.6364" y="3.27273" width="12.1818" height="12.4545"/>
+  <object id="26" type="pillar" x="55.3636" y="3.27273" width="12.5455" height="12.4545"/>
+  <object id="27" type="pillar" x="39.7273" y="3.27273" width="15.8182" height="12.4545"/>
+ </objectgroup>
+</map>

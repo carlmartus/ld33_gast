@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="8" tilewidth="8" tileheight="8" nextobjectid="22">
- <tileset firstgid="1" name="tex" tilewidth="8" tileheight="8">
-  <image source="../www/tex.png" width="32" height="32"/>
- </tileset>
- <layer name="Tile Layer 1" width="10" height="8">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="12" height="8" tilewidth="8" tileheight="8" nextobjectid="28">
+ <tileset firstgid="1" source="tiles.tsx"/>
+ <layer name="Tile Layer 1" width="12" height="8">
   <data encoding="base64" compression="zlib">
-   eJxjYmBgYIJiRjwYXQ0TFkyOOmYoplQdLvfSWh0AVkwAhw==
+   eJxjZmBgYIZiRiIwulomLJgS9TAxmD5s6pmxyBOrHt0/hNxDqXpCGACFYACl
   </data>
  </layer>
  <objectgroup name="Object Layer 1">
-  <object id="2" type="pillar" x="9.45455" y="11.3636" width="2.54545" height="2.09091"/>
-  <object id="3" type="pillar" x="29.0909" y="23.6364" width="1.90909" height="5"/>
-  <object id="4" type="pillar" x="57.6364" y="38.3637" width="2.36364" height="2"/>
-  <object id="5" type="pillar" x="57.7272" y="26.2727" width="2.36364" height="2"/>
+  <object id="2" type="pillar" x="4.07955" y="33.2386" width="8.04545" height="2.09091"/>
+  <object id="3" type="pillar" x="29.0909" y="23.6364" width="2.6591" height="11.8636"/>
+  <object id="4" type="pillar" x="57.3864" y="40.9887" width="2.36364" height="2"/>
+  <object id="5" type="pillar" x="57.6022" y="24.3977" width="2.36364" height="2"/>
   <object id="11" type="light" x="49.2727" y="31.2727" width="3.90909" height="3.90909">
    <properties>
-    <property name="b" value="0"/>
+    <property name="b" value="1"/>
     <property name="g" value="1"/>
     <property name="r" value="1"/>
     <property name="radius" value="5"/>
@@ -24,20 +22,26 @@
   </object>
   <object id="12" type="pillar" x="41.8182" y="40" width="2.36364" height="2"/>
   <object id="13" type="pillar" x="42.8182" y="25.1818" width="2.36364" height="2"/>
-  <object id="14" type="pillar" x="28.9091" y="32.8182" width="1.90909" height="7.09091"/>
-  <object id="15" type="light" x="6.45455" y="28.8182" width="3.90909" height="3.90909">
+  <object id="15" type="light" x="4.07955" y="29.9432" width="3.90909" height="3.90909">
    <ellipse/>
   </object>
-  <object id="16" type="pillar" x="4.09091" y="22.3636" width="2.54545" height="2.09091"/>
-  <object id="17" name="p0" type="path" x="9.72727" y="1.81818">
-   <polyline points="-4.27273,9.27273 -4.27273,14.4545 3.27273,20.7273 2.81818,30.3636"/>
-  </object>
-  <object id="19" type="pillar" x="19.1818" y="33.8182" width="2.00001" height="6.18184"/>
+  <object id="16" type="pillar" x="2.96591" y="24.3636" width="2.54545" height="4.1364"/>
+  <object id="19" type="pillar" x="16.5568" y="23.4432" width="2.00001" height="6.18184"/>
+  <object id="23" type="pillar" x="72.0909" y="23.8864" width="1.90909" height="5"/>
+  <object id="24" type="pillar" x="72.1591" y="34.125" width="1.90909" height="6.03411"/>
+  <object id="26" type="pillar" x="22.0568" y="27.125" width="2.00001" height="12.75"/>
+  <object id="27" type="pillar" x="8" y="18.1136" width="5.125" height="2.09091"/>
  </objectgroup>
  <objectgroup color="#ff0004" name="Object Layer 2">
   <object id="10" type="player" x="19.2727" y="3.72727" width="2.63636" height="2.63636">
    <ellipse/>
   </object>
-  <object id="21" type="man" x="5.375" y="9.25" width="2.5" height="2.1875"/>
+  <object id="21" type="man" x="8.5" y="23.875" width="2.5" height="2.1875"/>
+  <object id="22" type="man" x="37.5" y="31.125" width="2.5" height="2.1875">
+   <properties>
+    <property name="path" value="p0"/>
+   </properties>
+  </object>
+  <object id="25" name="l1" type="level" x="73.75" y="27" width="36" height="35.5"/>
  </objectgroup>
 </map>

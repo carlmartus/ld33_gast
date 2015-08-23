@@ -3,7 +3,7 @@
 import zlib, base64
 from xml.dom.minidom import parse
 
-MAPS = [ 'l0' ]
+MAPS = [ 'l0', 'l1' ]
 OUT = 'src/gen_maps.coffe'
 
 out = {}
@@ -16,8 +16,8 @@ for name in MAPS:
     h = int(tagMap.getAttribute('height'))
 
     tagTiles = tagMap.getElementsByTagName('tileset')[0]
-    tileW = float(tagTiles.getAttribute('tilewidth'))
-    tileH = float(tagTiles.getAttribute('tileheight'))
+    tileW = float(tagMap.getAttribute('tilewidth'))
+    tileH = float(tagMap.getAttribute('tileheight'))
 
     tagLayerMap = tagMap.getElementsByTagName('layer')[0]
     tagData = tagLayerMap.getElementsByTagName('data')[0]
@@ -36,15 +36,21 @@ for name in MAPS:
             if object.hasAttribute('height'):
                 oh = float(object.getAttribute('height'))
 
-            cx = (float(object.getAttribute('x')) + 0.5*ow) /tileW
-            cy = (float(object.getAttribute('y')) + 0.5*oh) /tileH
+            tx = float(object.getAttribute('x'))
+            ty = float(object.getAttribute('y'))
+            cx = (tx + 0.5*ow) /tileW
+            cy = (ty + 0.5*oh) /tileH
+            objName = object.getAttribute('name')
 
             dict = {
+                'name': objName,
                 'type': type,
                 'cx': cx,
                 'cy': cy,
+                'tx': tx / tileW,
+                'ty': ty / tileH,
                 'w': ow*0.5 / tileW,
-                'h': oh*0.5 / tileH
+                'h': oh*0.5 / tileH,
             }
 
             tagProperties = object.getElementsByTagName('properties')
@@ -59,6 +65,9 @@ for name in MAPS:
                 path = []
                 for tupStr in pointStr.split(' '):
                     x, y = [float(coord) for coord in tupStr.split(',')]
+                    x = (x + (tx + ow/2)) / tileW
+                    y = (y + (tx + oh/2)) / tileH
+                    #print(x, y)
                     path.append([x, y])
             if path: dict['path'] = path
 
