@@ -41,7 +41,7 @@ for name in MAPS:
                 'w': ow*0.5 / tileW,
                 'h': oh*0.5 / tileH
                 })
-            print(type, cx, cy)
+            #print(type, cx, cy)
 
     ids = [raw[i*4] - 1 for i in range(w*h)]
     out[name] = { 'grid': ids, 'w': w, 'h': h, 'objects': objects }

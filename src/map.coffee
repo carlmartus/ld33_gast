@@ -75,6 +75,9 @@ class Map
 		@h = data.h
 		@grid = data.grid
 		@objects = data.objects
+		@time = 0.0
+		@timeOffsetX = 0.0
+		@timeOffsetY = 0.0
 
 		# Shaders
 		@programColor = new esProgram(gl)
@@ -134,7 +137,6 @@ class Map
 		# Objects
 		for obj in @objects
 			if obj.type == 'pillar'
-				console.log(obj)
 				p = new Pillar(obj.cx, obj.cy, obj.w, obj.h)
 				p.pushWalls(@walls)
 
@@ -155,6 +157,11 @@ class Map
 			wall.vertsEdge(vertsEdge)
 		@vbaEdgeCount = vertsEdge.length / 4
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertsEdge), gl.STATIC_DRAW)
+
+	frame: (ft) ->
+		@time += ft*0.2
+		#@timeOffsetX = Math.cos(@time)*0.1
+		#@timeOffsetY = Math.sin(@time)*0.1
 
 	setMvp: (mvp) ->
 		@programColor.use()
@@ -185,12 +192,10 @@ class Map
 	renderColors: (light) ->
 		@programColor.use()
 
-		#gl.uniformMatrix4fv(@unifColorMvp, false, mvp);
 		gl.uniform1i(@unifColorTexture, 0)
-
-		light.uniforms(@unifColorLightPos, @unifColorLightCol, @unifColorLightRad)
-		#gl.uniform3f(@unifColorLightCol, 1.0, 0.0, 0.0)
-		#gl.uniform2f(@unifColorLightPos, 0.5, 0.5)
+		light.uniforms(
+			@timeOffsetX, @timeOffsetY,
+			@unifColorLightPos, @unifColorLightCol, @unifColorLightRad)
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, @vbaColor)
 		gl.enableVertexAttribArray(0);
@@ -205,9 +210,9 @@ class Map
 	renderEdges: (light) ->
 		@programEdge.use()
 
-		#gl.uniformMatrix4fv(@unifEdgeMvp, false, mvp);
-		#gl.uniform2f(@unifEdgeLightPos, 4.5, 4.5)
-		light.uniforms(@unifEdgeLightPos, null)
+		light.uniforms(
+			@timeOffsetX, @timeOffsetY,
+			@unifEdgeLightPos, null)
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, @vbaEdge)
 		gl.enableVertexAttribArray(0);
@@ -284,7 +289,6 @@ class Pillar
 		v1 = esVec2_parse(@cx+@w, @cy-@h)
 		v2 = esVec2_parse(@cx+@w, @cy+@h)
 		v3 = esVec2_parse(@cx-@w, @cy+@h)
-		console.log(@cx, @cy, @w, @h, v0, v1, v2, v3)
 		arr.push(new Wall(v0, v1))
 		arr.push(new Wall(v1, v2))
 		arr.push(new Wall(v2, v3))
@@ -297,8 +301,10 @@ class Light
 
 	setPosition: (@x, @y) ->
 
-	uniforms: (unifPos, unifCol, unifRad) ->
-		gl.uniform2f(unifPos, @x, @y) if unifPos
+	uniforms: (offsetX, offsetY, unifPos, unifCol, unifRad) ->
+		x = @x + offsetX
+		y = @y + offsetY
+		gl.uniform2f(unifPos, x, y) if unifPos
 		gl.uniform3f(unifCol, @r, @g, @b) if unifCol
 		gl.uniform1f(unifRad, @radius) if unifRad
 

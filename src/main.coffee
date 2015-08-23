@@ -19,6 +19,9 @@ class Ld33
 		window.addEventListener('blur', -> window.blockRender = true)
 		window.addEventListener('focus', -> window.blockRender = false)
 
+		document.addEventListener('keydown', (event) => @key(event, true))
+		document.addEventListener('keyup', (event) => @key(event, false))
+
 		load = new esLoad()
 		@tex0 = load.loadTexture(gl, 'tex.png', gl.NEAREST, gl.NEAREST);
 		gl.bindTexture(gl.TEXTURE_2D, @tex0)
@@ -38,6 +41,14 @@ class Ld33
 
 	downloaded: =>
 		esNextFrame(@frame);
+
+	key: (event, p) ->
+		switch (event.keyCode)
+			when 37 then @state.inputLeft(p)
+			when 38 then @state.inputUp(p)
+			when 39 then @state.inputRight(p)
+			when 40 then @state.inputDown(p)
+			else console.log(event.keyCode)
 
 main = -> new Ld33
 

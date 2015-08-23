@@ -9,7 +9,7 @@
   </data>
  </layer>
  <objectgroup name="Object Layer 1">
-  <object id="2" type="pillar" x="10.4545" y="14.1818" width="2.54545" height="2.09091"/>
+  <object id="2" type="pillar" x="3" y="10.3636" width="2.54545" height="2.09091"/>
   <object id="3" type="pillar" x="2.45455" y="20.7273" width="8.81818" height="2.63636"/>
  </objectgroup>
 </map>
