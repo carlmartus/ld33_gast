@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="8" tilewidth="8" tileheight="8" nextobjectid="21">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="8" tilewidth="8" tileheight="8" nextobjectid="22">
  <tileset firstgid="1" name="tex" tilewidth="8" tileheight="8">
   <image source="../www/tex.png" width="32" height="32"/>
  </tileset>
@@ -38,5 +38,6 @@
   <object id="10" type="player" x="19.2727" y="3.72727" width="2.63636" height="2.63636">
    <ellipse/>
   </object>
+  <object id="21" type="man" x="5.375" y="9.25" width="2.5" height="2.1875"/>
  </objectgroup>
 </map>

@@ -17,6 +17,11 @@ SPRITE_YOU = new SpriteConst(1, 2, 1)
 SPRITE_YOU_AURA = new SpriteConst(0, 2, 1)
 SPRITE_YOU_ARMS = new SpriteConst(2, 2, 1)
 
+SPRITE_MAN_IDLE = new SpriteConst(0, 3, 1)
+SPRITE_MAN_WALK1 = new SpriteConst(1, 3, 1)
+SPRITE_MAN_WALK2 = new SpriteConst(2, 3, 1)
+SPRITE_MAN_PUNSH = new SpriteConst(3, 3, 1)
+
 GLSL_SPRITE_VERT = """#version 100
 precision mediump float;
 

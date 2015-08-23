@@ -71,7 +71,7 @@ void main() {
 """
 
 class Map
-	constructor: ->
+	constructor: (@state) ->
 		@timeOffset = esVec2_parse(0, 0)
 		@playerStart = esVec2_parse(0, 0)
 
@@ -140,6 +140,7 @@ class Map
 
 		# Objects
 		@lights = []
+		@ais = []
 		for obj in @objects
 			switch obj.type
 				when 'pillar'
@@ -153,13 +154,17 @@ class Map
 					r = if obj.r then obj.r else 0.4
 					g = if obj.g then obj.g else 0.4
 					b = if obj.b then obj.b else 0.0
-					radius = obj.radius if obj.radius else 3.0
+					radius = if obj.radius then obj.radius else 3.0
 
 					light = new Light(r, g, b, radius)
 					light.setPosition(obj.cx, obj.cy)
 					@lights.push(light)
 				when 'path'
 					; #console.log(obj)
+				when 'man'
+					man = new Ai(@state)
+					man.setPosition(obj.cx, obj.cy)
+					@ais.push(man)
 
 		# Color vertices
 		@vbaColor = gl.createBuffer()
@@ -272,6 +277,7 @@ class Map
 			veLoc[0] + veDir[0],
 			veLoc[1] + veDir[1])
 
+		hit = true
 		for wall in @walls
 			if wall.grind(veLoc, veDir, veDst, radius)
 				veDir[0] = veDst[0] - veLoc[0]
@@ -279,6 +285,11 @@ class Map
 
 		veLoc[0] += veDir[0]
 		veLoc[1] += veDir[1]
+
+	canSee: (v0, v1) ->
+		for wall in @walls
+			return false if wall.intesects(v0, v1, 0.0)
+		return true
 
 	pushGridWall: (x, y, dx, dy) ->
 		v0 = esVec2_parse(x, y)
@@ -362,6 +373,23 @@ class Wall
 
 		veDst[0] = veDst[0] + (radius - dotDst)*@plane[0]
 		veDst[1] = veDst[1] + (radius - dotDst)*@plane[1]
+
+		return true
+
+	intesects: (v0, v1) ->
+		dotV0 = @plane[0]*v0[0] + @plane[1]*v0[1] + @plane[2]
+		dotV1 = @plane[0]*v1[0] + @plane[1]*v1[1] + @plane[2]
+
+		return false if dotV0*dotV1 >= 0.0
+
+		p = Math.abs(dotV0) / (Math.abs(dotV0) + Math.abs(dotV1))
+		hit = esVec2_parse(
+			p*(v1[0] - v0[0]) + v0[0],
+			p*(v1[1] - v0[1]) + v0[1])
+
+		dotE0 = @planeE0[0]*hit[0] + @planeE0[1]*hit[1] + @planeE0[2]
+		dotE1 = @planeE1[0]*hit[0] + @planeE1[1]*hit[1] + @planeE1[2]
+		return false if dotE0 < 0.0 or dotE1 < 0.0
 
 		return true
 
