@@ -10,11 +10,11 @@ You are a monster that naturally lurks in the dark and has the ability to see in
 Do not let anyone see you in the light.
 If anyone sees you, you will get busted and the level will restart.
 
-Keys:
-UP - move up
-DOWN -  move down
-LEFT - move left
-RIGHT move right
+_Keys:_
+ * UP - move up
+ * DOWN -  move down
+ * LEFT - move left
+ * RIGHT move right
 
 This game is turned out to be more of tech demo than a game but I figured I'd post it anyway since it's easy to play. Just press the link to play the game.
 
