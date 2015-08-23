@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="8" tilewidth="8" tileheight="8" nextobjectid="6">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="8" tilewidth="8" tileheight="8" nextobjectid="12">
  <tileset firstgid="1" name="tex" tilewidth="8" tileheight="8">
   <image source="../www/tex.png" width="32" height="32"/>
  </tileset>
  <layer name="Tile Layer 1" width="10" height="8">
   <data encoding="base64" compression="zlib">
-   eJxjYmBgYIJiRjwYXQ0TFkyOOnyYFHW43EtrdQBTpACD
+   eJxjYmBgYIJiRjwYXQ0TFkyOOmYoplQdLvfSWh0AVkwAhw==
   </data>
  </layer>
  <objectgroup name="Object Layer 1">
@@ -13,5 +13,18 @@
   <object id="3" type="pillar" x="2.45455" y="20.7273" width="8.81818" height="2.63636"/>
   <object id="4" type="pillar" x="55" y="38.5455" width="2.36364" height="2"/>
   <object id="5" type="pillar" x="54.2727" y="26.1818" width="2.36364" height="2"/>
+  <object id="11" type="light" x="9.45455" y="5" width="3.90909" height="3.90909">
+   <properties>
+    <property name="b" value="0"/>
+    <property name="g" value="0"/>
+    <property name="r" value="1"/>
+   </properties>
+   <ellipse/>
+  </object>
+ </objectgroup>
+ <objectgroup color="#ff0004" name="Object Layer 2">
+  <object id="10" type="player" x="15.6364" y="31.3636" width="2.63636" height="2.63636">
+   <ellipse/>
+  </object>
  </objectgroup>
 </map>

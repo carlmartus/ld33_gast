@@ -1,19 +1,21 @@
 class Entity
-	constructor: ->
+	constructor: (@map) ->
 		@x = 0.0
 		@y = 0.0
 
 	setPosition: (@x, @y) ->
 
-	move: (@dx, @dy) ->
+	move: (dx, dy) ->
+		@x += dx
+		@y += dy
 
 	render: -> console.log('Unimplemented', @)
 	frame: (ft) -> console.log('Unimplemented', @)
 	resetStates: -> console.log('Unimplemented', @)
 
 class Player extends Entity
-	constructor: ->
-		super()
+	constructor: (map) ->
+		super(map)
 		@ent = new Entity()
 		@walkXP = false
 		@walkXN = false
@@ -28,8 +30,7 @@ class Player extends Entity
 		dy += 1.0 if @walkYP
 		dy -= 1.0 if @walkYN
 
-		@x += dx*ft
-		@y += dy*ft
+		@move(dx*ft, dy*ft)
 
 	makeMvp: (w, h, radius) ->
 		mat = esMat4_create()

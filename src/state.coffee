@@ -1,13 +1,6 @@
 class State
 	constructor: ->
-		@lights = [new Light(0.3, 0.3, 0, 3.0)]
-		#@lights = [new Light(0.3, 0.3, 0, 3.0), new Light(0.3, 0.3, 0, 3.0)]
-		@lights[0].setPosition(1.8, 1.4)
-		#@lights[1].setPosition(1.8, 3.5)
-
-		@playerLight = new Light(0, 1.0, 0, 0.4)
-		@player = new Player()
-		@player.setPosition(0.5, 3.0)
+		@map = new Map()
 
 	frame: (ft) =>
 		@mvp = @player.makeMvp(@screen_w, @screen_h, 4.0)
@@ -22,7 +15,15 @@ class State
 			@playerLight.setColor(0, 1, 0)
 
 	loadMap: (name) =>
-		@map = new Map(name)
+		@map.loadMap(name)
+		@player = new Player(@map)
+		@player.setPosition(@map.playerStart[0], @map.playerStart[1])
+		@lights = [new Light(0.3, 0.3, 0, 3.0)]
+		#@lights = [new Light(0.3, 0.3, 0, 3.0), new Light(0.3, 0.3, 0, 3.0)]
+		@lights[0].setPosition(1.8, 1.4)
+		#@lights[1].setPosition(1.8, 3.5)
+
+		@playerLight = new Light(0, 1.0, 0, 0.4)
 
 	render: =>
 		@map.setMvp(@mvp)

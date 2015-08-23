@@ -1,12 +1,14 @@
 TILE_NONE = 0
 TILE_FLOOR0 = 1
+TILE_FLOOR1 = 2
 
 UV_DIM = 4
 UV_INC = (1/UV_DIM)
 
 UVS = {}
 UVS[TILE_NONE] =	{ 'solid':true, 'u': 0/UV_DIM, 'v': 0/UV_DIM } # Nothing
-UVS[TILE_FLOOR0] =	{ 'solid':false, 'u': 1/UV_DIM, 'v': 0/UV_DIM } # Floor 0
+UVS[TILE_FLOOR0] =	{ 'solid':false, 'u': 1/UV_DIM, 'v': 0/UV_DIM } # Tiles
+UVS[TILE_FLOOR1] =	{ 'solid':false, 'u': 2/UV_DIM, 'v': 0/UV_DIM } # Concreet
 
 GLSL_COLOR_VERT = """#version 100
 precision mediump float;
@@ -69,15 +71,9 @@ void main() {
 """
 
 class Map
-	constructor: (name) ->
-		data = LEVELS[name]
-		@w = data.w
-		@h = data.h
-		@grid = data.grid
-		@objects = data.objects
-		@time = 0.0
-		@timeOffsetX = 0.0
-		@timeOffsetY = 0.0
+	constructor: ->
+		@timeOffset = esVec2_parse(0, 0)
+		@playerStart = esVec2_parse(0, 0)
 
 		# Shaders
 		@programColor = new esProgram(gl)
@@ -101,6 +97,14 @@ class Map
 		@unifEdgeMvp = @programEdge.getUniform('un_mvp')
 		@unifEdgeLightPos = @programEdge.getUniform('un_lightPos')
 
+	loadMap: (name) ->
+		data = LEVELS[name]
+		@w = data.w
+		@h = data.h
+		@grid = data.grid
+		@objects = data.objects
+		@time = 0.0
+
 		# Geometry
 		@floors = []
 		i = 0
@@ -108,7 +112,7 @@ class Map
 			x = i % @w
 			y = Math.floor(i / @w)
 
-			if id is TILE_FLOOR0
+			if not UVS[id].solid
 				@floors.push(new Floor(id, x, y))
 
 			i++
@@ -136,9 +140,13 @@ class Map
 
 		# Objects
 		for obj in @objects
-			if obj.type == 'pillar'
-				p = new Pillar(obj.cx, obj.cy, obj.w, obj.h)
-				p.pushWalls(@walls)
+			switch obj.type
+				when 'pillar'
+					p = new Pillar(obj.cx, obj.cy, obj.w, obj.h)
+					p.pushWalls(@walls)
+				when 'player'
+					@playerStart[0] = obj.cx
+					@playerStart[1] = obj.cy
 
 		# Color vertices
 		@vbaColor = gl.createBuffer()
@@ -175,17 +183,17 @@ class Map
 		gl.stencilMask(0xff);
 		gl.clear(gl.STENCIL_BUFFER_BIT);
 
-		gl.enable(gl.TEXTURE_2D)
 		gl.colorMask(false, false, false, false);
 		gl.stencilFunc(gl.ALWAYS, 1, 0xff);
 		gl.stencilOp(gl.KEEP, gl.KEEP, gl.REPLACE)
 		@renderEdges(light)
-		gl.disable(gl.TEXTURE_2D)
 
+		gl.enable(gl.TEXTURE_2D)
 		gl.colorMask(true, true, true, true);
 		gl.stencilMask(0);
 		gl.stencilFunc(gl.EQUAL, 0, 0xff);
 		@renderColors(light)
+		gl.disable(gl.TEXTURE_2D)
 
 		gl.disable(gl.STENCIL_TEST);
 
@@ -194,7 +202,7 @@ class Map
 
 		gl.uniform1i(@unifColorTexture, 0)
 		light.uniforms(
-			@timeOffsetX, @timeOffsetY,
+			@timeOffset[0], @timeOffset[1],
 			@unifColorLightPos, @unifColorLightCol, @unifColorLightRad)
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, @vbaColor)
@@ -211,7 +219,7 @@ class Map
 		@programEdge.use()
 
 		light.uniforms(
-			@timeOffsetX, @timeOffsetY,
+			@timeOffset[0], @timeOffset[1],
 			@unifEdgeLightPos, null)
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, @vbaEdge)
@@ -302,7 +310,6 @@ class Wall
 		dotE1 = @ne1[0]*veEnt[0] + @ne1[1]*veEnt[1] + @ne1[2]
 
 		if dotE0*dotE1 < 0.0
-			#console.log('Shada')
 			return true
 
 		return false
