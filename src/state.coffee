@@ -6,7 +6,7 @@ class State
 		@extraLights = []
 
 	frame: (ft) =>
-		@mvp = @player.makeMvp(@screen_w, @screen_h, 2.0)
+		@mvp = @player.makeMvp(@screen_w, @screen_h)
 		@map.frame(ft)
 
 		@player.frame(ft)

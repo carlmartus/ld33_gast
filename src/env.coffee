@@ -39,7 +39,6 @@ class Ai extends Entity
 				@moving = false
 				@consider = 4.0
 			else
-				console.log(@actionZone)
 				@walk(
 					@actionZone[0] + 0.6*Math.random(),
 					@actionZone[1] + 0.6*Math.random())
@@ -48,7 +47,14 @@ class Ai extends Entity
 			if @scanCd <= 0.0
 				@scanCd = 0.2
 
-				if @state.player.visible and @state.map.canSee(@loc, @state.player.loc)
+				lookDir = esVec2_parse(
+					@loc[0] - @state.player.loc[0],
+					@loc[1] - @state.player.loc[1])
+				dot = lookDir[0]*@moveDir[0] + lookDir[1]*@moveDir[1]
+				if (
+					@state.player.visible and
+					dot < 0.0 and
+					@state.map.canSee(@loc, @state.player.loc))
 					return @panic(@state.player.loc[0], @state.player.loc[1])
 			else
 				@scanCd -= ft
@@ -183,7 +189,8 @@ class Player extends Entity
 
 		@state.sprites.push(@loc[0], @loc[1], v, @hunge, SPRITE_YOU)
 
-	makeMvp: (w, h, radius) ->
+	makeMvp: (w, h) ->
+		radius = 4.0 - @hunge * 8.0
 		mat = esMat4_create()
 		ratio = w / h
 
