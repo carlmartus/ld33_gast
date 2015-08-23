@@ -127,13 +127,13 @@ class Map
 			x = i % @w
 			y = Math.floor(i / @w)
 
-			if id is TILE_FLOOR0
+			if not UVS[id].solid
 				if not goodCoord(x-1, y)
 					@pushGridWall(x, y, 0, 1)
 				if not goodCoord(x+1, y)
-					@pushGridWall(x+1, y, 0, 1)
+					@pushGridWall(x+1, y+1, 0, -1)
 				if not goodCoord(x, y-1)
-					@pushGridWall(x, y, 1, 0)
+					@pushGridWall(x+1, y, -1, 0)
 				if not goodCoord(x, y+1)
 					@pushGridWall(x, y+1, 1, 0)
 			i++
@@ -252,7 +252,16 @@ class Map
 			return true if not shaded
 		return false
 
-	moveInWord: (veLoc, veDir) ->
+	moveInWord: (veLoc, veDir, radius) ->
+		veDst = esVec2_parse(
+			veLoc[0] + veDir[0],
+			veLoc[1] + veDir[1])
+
+		for wall in @walls
+			if wall.grind(veLoc, veDir, veDst, radius)
+				veDir[0] = veDst[0] - veLoc[0]
+				veDir[1] = veDst[1] - veLoc[1]
+
 		veLoc[0] += veDir[0]
 		veLoc[1] += veDir[1]
 
@@ -276,6 +285,11 @@ class Wall
 		esVec2_mulk(@n1, @n0, -1.0)
 
 		@plane = esVec3_parse(@n0[0], @n0[1], -(@n0[0]*@v0[0] + @n0[1]*@v0[1]))
+
+		nS0 = esVec2_parse(-@n0[1], @n0[0])
+		nS1 = esVec2_parse(-nS0[0], -nS0[1])
+		@planeE0 = esVec3_parse(nS0[0], nS0[1], -(nS0[0]*@v0[0] + nS0[1]*@v0[1]))
+		@planeE1 = esVec3_parse(nS1[0], nS1[1], -(nS1[0]*@v1[0] + nS1[1]*@v1[1]))
 
 		@e0 = esVec2_create()
 		@e1 = esVec2_create()
@@ -315,6 +329,27 @@ class Wall
 			return true
 
 		return false
+
+	grind: (veLoc, veDir, veDst, radius) ->
+		dotDir = @plane[0]*veDir[0] + @plane[1]*veDir[1]
+		return false if dotDir > 0.0
+
+		dotLoc = @plane[0]*veLoc[0] + @plane[1]*veLoc[1] + @plane[2]
+		return false if dotLoc < 0.0 or dotLoc > radius
+
+		dotDst = @plane[0]*veDst[0] + @plane[1]*veDst[1] + @plane[2]
+		return false if dotDst < 0.0 or dotDst > radius
+
+		dotE0 = @planeE0[0]*veDst[0] + @planeE0[1]*veDst[1] + @planeE0[2]
+		dotE1 = @planeE1[0]*veDst[0] + @planeE1[1]*veDst[1] + @planeE1[2]
+
+		return false if dotE0 < -radius or dotE1 < -radius
+
+		veDst[0] = veDst[0] + (radius - dotDst)*@plane[0]
+		veDst[1] = veDst[1] + (radius - dotDst)*@plane[1]
+
+		console.log('Hit')
+		return true
 
 class Floor
 	constructor: (@id, @x, @y) ->

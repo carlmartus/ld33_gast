@@ -10,7 +10,7 @@
  </layer>
  <objectgroup name="Object Layer 1">
   <object id="2" type="pillar" x="3" y="10.3636" width="2.54545" height="2.09091"/>
-  <object id="3" type="pillar" x="2.45455" y="20.7273" width="8.81818" height="2.63636"/>
+  <object id="3" type="pillar" x="2.72728" y="27.2728" width="8.81818" height="2.63636"/>
   <object id="4" type="pillar" x="55" y="38.5455" width="2.36364" height="2"/>
   <object id="5" type="pillar" x="54.2727" y="26.1818" width="2.36364" height="2"/>
   <object id="11" type="light" x="9.45455" y="5" width="3.90909" height="3.90909">
@@ -23,7 +23,7 @@
   </object>
  </objectgroup>
  <objectgroup color="#ff0004" name="Object Layer 2">
-  <object id="10" type="player" x="15.6364" y="31.3636" width="2.63636" height="2.63636">
+  <object id="10" type="player" x="18.0909" y="30.9091" width="2.63636" height="2.63636">
    <ellipse/>
   </object>
  </objectgroup>

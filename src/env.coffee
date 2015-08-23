@@ -1,4 +1,4 @@
-ENT_RADIUS = 0.1
+ENT_RADIUS = 0.2
 
 class Entity
 	constructor: (@map) ->
@@ -12,7 +12,7 @@ class Entity
 	move: (dx, dy) ->
 		@dir[0] = dx
 		@dir[1] = dy
-		@map.moveInWord(@loc, @dir)
+		@map.moveInWord(@loc, @dir, ENT_RADIUS)
 
 	render: -> console.log('Unimplemented', @)
 	frame: (ft) -> console.log('Unimplemented', @)
