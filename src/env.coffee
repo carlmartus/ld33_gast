@@ -1,7 +1,7 @@
 ENT_RADIUS = 0.2
 
 class Entity
-	constructor: (@map) ->
+	constructor: (@map, @sl) ->
 		@loc = esVec2_create()
 		@dir = esVec2_create()
 
@@ -19,8 +19,8 @@ class Entity
 	resetStates: -> console.log('Unimplemented', @)
 
 class Player extends Entity
-	constructor: (map) ->
-		super(map)
+	constructor: (map, sl) ->
+		super(map, sl)
 		@ent = new Entity()
 		@walkXP = false
 		@walkXN = false
@@ -36,6 +36,9 @@ class Player extends Entity
 		dy -= 1.0 if @walkYN
 
 		@move(dx*ft, dy*ft)
+
+	render: ->
+		@sl.push(@loc[0], @loc[1], Math.PI, 0.2, SPRITE_FLOOR0)
 
 	makeMvp: (w, h, radius) ->
 		mat = esMat4_create()

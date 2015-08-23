@@ -1,6 +1,8 @@
 class State
 	constructor: ->
 		@map = new Map()
+		@sprites = new SpriteLib()
+		@sprites.create()
 
 	frame: (ft) =>
 		@mvp = @player.makeMvp(@screen_w, @screen_h, 4.0)
@@ -9,31 +11,35 @@ class State
 		@player.frame(ft)
 		@playerLight.setPosition(@player.loc[0], @player.loc[1])
 
-		if @map.isVisible(@player, @lights)
+		if @map.isVisible(@player, @map.getMapLights())
 			@playerLight.setColor(1, 0, 0)
+			@playerLight.setRadius(0.1)
 		else
-			@playerLight.setColor(0, 1, 0)
+			@playerLight.setColor(0, 0.4, 0)
+			@playerLight.setRadius(4.0)
 
 	loadMap: (name) =>
 		@map.loadMap(name)
-		@player = new Player(@map)
+		@player = new Player(@map, @sprites)
 		@player.setPosition(@map.playerStart[0], @map.playerStart[1])
-		@lights = [new Light(0.3, 0.3, 0, 3.0)]
-		#@lights = [new Light(0.3, 0.3, 0, 3.0), new Light(0.3, 0.3, 0, 3.0)]
-		@lights[0].setPosition(1.8, 1.4)
-		#@lights[1].setPosition(1.8, 3.5)
 
-		@playerLight = new Light(0, 1.0, 0, 0.4)
+		@playerLight = new Light(0, 1.0, 0, 1.0)
 
 	render: =>
 		@map.setMvp(@mvp)
 
 		gl.enable(gl.BLEND)
 		gl.blendFunc(gl.ONE, gl.ONE)
-		for light in @lights
+		for light in @map.getMapLights()
 			@map.renderLight(light)
 		@map.renderLight(@playerLight)
 		gl.disable(gl.BLEND)
+
+		@player.render()
+
+		@sprites.setMvp(@mvp)
+		@sprites.copy()
+		@sprites.render()
 
 	setScreenSize: (w, h) ->
 		@screen_w = w

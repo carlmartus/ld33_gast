@@ -28,19 +28,41 @@ for name in MAPS:
     objects = []
     for group in tagMap.getElementsByTagName('objectgroup'):
         for object in group.getElementsByTagName('object'):
-            ow = float(object.getAttribute('width'))
-            oh = float(object.getAttribute('height'))
+            type = object.getAttribute('type')
+
+            ow, oh = 0.0, 0.0
+            if object.hasAttribute('width'):
+                ow = float(object.getAttribute('width'))
+            if object.hasAttribute('height'):
+                oh = float(object.getAttribute('height'))
+
             cx = (float(object.getAttribute('x')) + 0.5*ow) /tileW
             cy = (float(object.getAttribute('y')) + 0.5*oh) /tileH
 
-            type = object.getAttribute('type')
-            objects.append({
+            dict = {
                 'type': type,
                 'cx': cx,
                 'cy': cy,
                 'w': ow*0.5 / tileW,
                 'h': oh*0.5 / tileH
-                })
+            }
+
+            tagProperties = object.getElementsByTagName('properties')
+            if len(tagProperties) > 0:
+                for prop in tagProperties[0].getElementsByTagName('property'):
+                    dict[prop.getAttribute('name')] = prop.getAttribute('value')
+
+            path = None
+            tagPolyLine = object.getElementsByTagName('polyline')
+            if len(tagPolyLine) > 0:
+                pointStr = tagPolyLine[0].getAttribute('points')
+                path = []
+                for tupStr in pointStr.split(' '):
+                    x, y = [float(coord) for coord in tupStr.split(',')]
+                    path.append([x, y])
+            if path: dict['path'] = path
+
+            objects.append(dict)
             #print(type, cx, cy)
 
     ids = [raw[i*4] - 1 for i in range(w*h)]

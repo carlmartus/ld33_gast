@@ -139,6 +139,7 @@ class Map
 			i++
 
 		# Objects
+		@lights = []
 		for obj in @objects
 			switch obj.type
 				when 'pillar'
@@ -147,6 +148,18 @@ class Map
 				when 'player'
 					@playerStart[0] = obj.cx
 					@playerStart[1] = obj.cy
+				when 'light'
+					[r, g, b, radius] = [0.4, 0.4, 0.0, 3.0]
+					r = obj.r if obj.r
+					g = obj.g if obj.g
+					b = obj.b if obj.b
+					radius = obj.radius if obj.radius
+
+					light = new Light(r, g, b, radius)
+					light.setPosition(obj.cx, obj.cy)
+					@lights.push(light)
+				when 'path'
+					console.log(obj)
 
 		# Color vertices
 		@vbaColor = gl.createBuffer()
@@ -231,6 +244,8 @@ class Map
 		gl.drawArrays(gl.TRIANGLES, 0, @vbaEdgeCount);
 		gl.disableVertexAttribArray(1);
 		gl.disableVertexAttribArray(0);
+
+	getMapLights: -> @lights
 
 	isVisible: (ent, lights) ->
 		#veEnt = esVec2_parse(ent.loc[0], ent.loc[1])
@@ -348,7 +363,6 @@ class Wall
 		veDst[0] = veDst[0] + (radius - dotDst)*@plane[0]
 		veDst[1] = veDst[1] + (radius - dotDst)*@plane[1]
 
-		console.log('Hit')
 		return true
 
 class Floor
@@ -402,6 +416,7 @@ class Light
 		@loc[1] = y
 
 	setColor: (@r, @g, @b) ->
+	setRadius: (@radius) ->
 
 	uniforms: (offsetX, offsetY, unifPos, unifCol, unifRad) ->
 		x = @loc[0] + offsetX
