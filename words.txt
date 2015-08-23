@@ -1,4 +1,4 @@
-The objective of the game is to sneak passed all the people standing around. You are a monster that naturally lurks in the dark and has the ability to see in it.
+The objective of the game is to sneak passed all the people standing around. You are a monster that naturally lurks in the dark and has the ability to see in it. Do not let anyone see you in the light. If anyone sees you, you will get busted and the level will restart.
 
 Keys:
 UP - move up
