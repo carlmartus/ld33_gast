@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="8" tilewidth="8" tileheight="8" nextobjectid="19">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="8" tilewidth="8" tileheight="8" nextobjectid="21">
  <tileset firstgid="1" name="tex" tilewidth="8" tileheight="8">
   <image source="../www/tex.png" width="32" height="32"/>
  </tileset>
@@ -25,13 +25,14 @@
   <object id="12" type="pillar" x="41.8182" y="40" width="2.36364" height="2"/>
   <object id="13" type="pillar" x="42.8182" y="25.1818" width="2.36364" height="2"/>
   <object id="14" type="pillar" x="28.9091" y="32.8182" width="1.90909" height="7.09091"/>
-  <object id="15" type="light" x="7.45455" y="27.6364" width="3.90909" height="3.90909">
+  <object id="15" type="light" x="6.45455" y="28.8182" width="3.90909" height="3.90909">
    <ellipse/>
   </object>
-  <object id="16" type="pillar" x="5.27273" y="22.4545" width="2.54545" height="2.09091"/>
+  <object id="16" type="pillar" x="4.09091" y="22.3636" width="2.54545" height="2.09091"/>
   <object id="17" name="p0" type="path" x="9.72727" y="1.81818">
    <polyline points="-4.27273,9.27273 -4.27273,14.4545 3.27273,20.7273 2.81818,30.3636"/>
   </object>
+  <object id="19" type="pillar" x="19.1818" y="33.8182" width="2.00001" height="6.18184"/>
  </objectgroup>
  <objectgroup color="#ff0004" name="Object Layer 2">
   <object id="10" type="player" x="19.2727" y="3.72727" width="2.63636" height="2.63636">

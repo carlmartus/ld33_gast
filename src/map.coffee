@@ -149,17 +149,17 @@ class Map
 					@playerStart[0] = obj.cx
 					@playerStart[1] = obj.cy
 				when 'light'
-					[r, g, b, radius] = [0.4, 0.4, 0.0, 3.0]
-					r = obj.r if obj.r
-					g = obj.g if obj.g
-					b = obj.b if obj.b
-					radius = obj.radius if obj.radius
+					[r, g, b, radius] = [0.0, 0.0, 0.0, 0.0]
+					r = if obj.r then obj.r else 0.4
+					g = if obj.g then obj.g else 0.4
+					b = if obj.b then obj.b else 0.0
+					radius = obj.radius if obj.radius else 3.0
 
 					light = new Light(r, g, b, radius)
 					light.setPosition(obj.cx, obj.cy)
 					@lights.push(light)
 				when 'path'
-					console.log(obj)
+					; #console.log(obj)
 
 		# Color vertices
 		@vbaColor = gl.createBuffer()

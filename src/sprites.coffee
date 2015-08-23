@@ -8,11 +8,14 @@ class SpriteConst
 		@v0 = idV/UV_DIM
 		@u1 = @u0 + @dim/UV_DIM
 		@v1 = @v0 + @dim/UV_DIM
-		console.log(@, UV_DIM)
 
 
 SPRITE_NONE = new SpriteConst(0, 0, 1)
 SPRITE_FLOOR0 = new SpriteConst(1, 0, 1)
+
+SPRITE_YOU = new SpriteConst(1, 2, 1)
+SPRITE_YOU_AURA = new SpriteConst(0, 2, 1)
+SPRITE_YOU_ARMS = new SpriteConst(2, 2, 1)
 
 GLSL_SPRITE_VERT = """#version 100
 precision mediump float;
@@ -46,7 +49,7 @@ class SpriteLib
 		@count = 0
 		@vertCount = 0
 		@holders = (new SpriteHolder() for i in [0..(SPRITE_MAX-1)])
-		@arr = new Float32Array(6*SPRITE_ELEMS)
+		@arr = new Float32Array(SPRITE_MAX*SPRITE_ELEMS*SPRITE_VERTS)
 
 	create: ->
 		# VBA
@@ -77,7 +80,6 @@ class SpriteLib
 			return
 
 		offset = 0
-
 		for i in [0..(@count-1)]
 			@holders[i].writeToArray(@arr, offset)
 			offset += SPRITE_VERTS*SPRITE_ELEMS
@@ -129,9 +131,6 @@ class SpriteHolder
 	writeToArray: (arr, offset) ->
 		px = @cv*@dim
 		py = @sv*@dim
-
-		#console.log(@sprite)
-		#console.log(@sprite.u0, @sprite.v0, @sprite.u1, @sprite.v1)
 
 		@writeVerticeToArray(arr, offset+0*SPRITE_ELEMS, @loc[0]+px, @loc[1]+py, @sprite.u0, @sprite.v0)
 		@writeVerticeToArray(arr, offset+1*SPRITE_ELEMS, @loc[0]+py, @loc[1]-px, @sprite.u1, @sprite.v0)

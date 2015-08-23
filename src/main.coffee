@@ -48,6 +48,7 @@ class Ld33
 			when 38 then @state.inputUp(p)
 			when 39 then @state.inputRight(p)
 			when 40 then @state.inputDown(p)
+			when 32 then @state.inputAction(p)
 			#else console.log(event.keyCode)
 
 main = -> new Ld33
