@@ -28,7 +28,7 @@ class Ld33
 		load.downloadWithGlScreen(gl, @downloaded);
 
 	frame: (ft) =>
-		return if window.blockRender || ft > 0.3
+		return if window.blockRender or ft > 0.3
 
 		@state.frame(ft)
 

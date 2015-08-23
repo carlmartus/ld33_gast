@@ -224,6 +224,28 @@ class Map
 		gl.disableVertexAttribArray(1);
 		gl.disableVertexAttribArray(0);
 
+	isVisible: (ent, lights) ->
+		veEnt = esVec2_parse(ent.x, ent.y)
+
+		for light in lights
+			continue if (
+				Math.abs(ent.x - light.x) > light.radius or
+				Math.abs(ent.y - light.y) > light.radius)
+			dx = ent.x - light.x
+			dy = ent.y - light.y
+			dist = Math.sqrt(dx*dx + dy*dy)
+
+			continue if dist > light.radius
+
+			veLight = esVec2_parse(light.x, light.y)
+
+			shaded = false
+			for wall in @walls
+				shaded = true if wall.shadows(veEnt, veLight)
+
+			return true if not shaded
+		return false
+
 	pushGridWall: (x, y, dx, dy) ->
 		v0 = esVec2_parse(x, y)
 		v1 = esVec2_parse(x+dx, y+dy)
@@ -243,6 +265,13 @@ class Wall
 		@n1 = esVec2_create()
 		esVec2_mulk(@n1, @n0, -1.0)
 
+		@plane = esVec3_parse(@n0[0], @n0[1], -(@n0[0]*@v0[0] + @n0[1]*@v0[1]))
+
+		@e0 = esVec2_create()
+		@e1 = esVec2_create()
+		@ne0 = esVec3_create()
+		@ne1 = esVec3_create()
+
 	vertsEdge: (arr) ->
 		pushEdgeVert(arr, @v0[0], @v0[1], @n0[0], @n0[1])
 		pushEdgeVert(arr, @v1[0], @v1[1], @n0[0], @n0[1])
@@ -251,6 +280,32 @@ class Wall
 		pushEdgeVert(arr, @v1[0], @v1[1], @n0[0], @n0[1])
 		pushEdgeVert(arr, @v1[0], @v1[1], @n1[0], @n1[1])
 		pushEdgeVert(arr, @v0[0], @v0[1], @n1[0], @n1[1])
+
+	shadows: (veEnt, veLight) ->
+		dotEnt = @plane[0]*veEnt[0] + @plane[1]*veEnt[1] + @plane[2]
+		dotLight = @plane[0]*veLight[0] + @plane[1]*veLight[1] + @plane[2]
+
+		return false if dotEnt*dotLight > 0.0
+
+		esVec2_sub(@e0, @v0, veLight)
+		esVec2_sub(@e1, @v1, veLight)
+
+		@ne0[0] = @e0[1]
+		@ne0[1] = -@e0[0]
+		@ne0[2] = -(@ne0[0]*@v0[0] + @ne0[1]*@v0[1])
+
+		@ne1[0] = @e1[1]
+		@ne1[1] = -@e1[0]
+		@ne1[2] = -(@ne1[0]*@v1[0] + @ne1[1]*@v1[1])
+
+		dotE0 = @ne0[0]*veEnt[0] + @ne0[1]*veEnt[1] + @ne0[2]
+		dotE1 = @ne1[0]*veEnt[0] + @ne1[1]*veEnt[1] + @ne1[2]
+
+		if dotE0*dotE1 < 0.0
+			#console.log('Shada')
+			return true
+
+		return false
 
 class Floor
 	constructor: (@id, @x, @y) ->
@@ -300,6 +355,8 @@ class Light
 		@y = 0.5
 
 	setPosition: (@x, @y) ->
+
+	setColor: (@r, @g, @b) ->
 
 	uniforms: (offsetX, offsetY, unifPos, unifCol, unifRad) ->
 		x = @x + offsetX

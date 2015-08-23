@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="8" tilewidth="8" tileheight="8" nextobjectid="4">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="8" tilewidth="8" tileheight="8" nextobjectid="6">
  <tileset firstgid="1" name="tex" tilewidth="8" tileheight="8">
   <image source="../www/tex.png" width="32" height="32"/>
  </tileset>
@@ -11,5 +11,7 @@
  <objectgroup name="Object Layer 1">
   <object id="2" type="pillar" x="3" y="10.3636" width="2.54545" height="2.09091"/>
   <object id="3" type="pillar" x="2.45455" y="20.7273" width="8.81818" height="2.63636"/>
+  <object id="4" type="pillar" x="55" y="38.5455" width="2.36364" height="2"/>
+  <object id="5" type="pillar" x="54.2727" y="26.1818" width="2.36364" height="2"/>
  </objectgroup>
 </map>
