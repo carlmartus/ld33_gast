@@ -233,26 +233,28 @@ class Map
 		gl.disableVertexAttribArray(0);
 
 	isVisible: (ent, lights) ->
-		veEnt = esVec2_parse(ent.x, ent.y)
+		#veEnt = esVec2_parse(ent.loc[0], ent.loc[1])
 
 		for light in lights
 			continue if (
-				Math.abs(ent.x - light.x) > light.radius or
-				Math.abs(ent.y - light.y) > light.radius)
-			dx = ent.x - light.x
-			dy = ent.y - light.y
+				Math.abs(ent.loc[0] - light.loc[0]) > light.radius or
+				Math.abs(ent.loc[1] - light.loc[1]) > light.radius)
+			dx = ent.loc[0] - light.loc[0]
+			dy = ent.loc[1] - light.loc[1]
 			dist = Math.sqrt(dx*dx + dy*dy)
 
 			continue if dist > light.radius
 
-			veLight = esVec2_parse(light.x, light.y)
-
 			shaded = false
 			for wall in @walls
-				shaded = true if wall.shadows(veEnt, veLight)
+				shaded = true if wall.shadows(ent.loc, light.loc)
 
 			return true if not shaded
 		return false
+
+	moveInWord: (veLoc, veDir) ->
+		veLoc[0] += veDir[0]
+		veLoc[1] += veDir[1]
 
 	pushGridWall: (x, y, dx, dy) ->
 		v0 = esVec2_parse(x, y)
@@ -358,16 +360,17 @@ class Pillar
 
 class Light
 	constructor: (@r, @g, @b, @radius) ->
-		@x = 0.5
-		@y = 0.5
+		@loc = esVec2_create()
 
-	setPosition: (@x, @y) ->
+	setPosition: (x, y) ->
+		@loc[0] = x
+		@loc[1] = y
 
 	setColor: (@r, @g, @b) ->
 
 	uniforms: (offsetX, offsetY, unifPos, unifCol, unifRad) ->
-		x = @x + offsetX
-		y = @y + offsetY
+		x = @loc[0] + offsetX
+		y = @loc[1] + offsetY
 		gl.uniform2f(unifPos, x, y) if unifPos
 		gl.uniform3f(unifCol, @r, @g, @b) if unifCol
 		gl.uniform1f(unifRad, @radius) if unifRad

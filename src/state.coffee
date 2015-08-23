@@ -7,7 +7,7 @@ class State
 		@map.frame(ft)
 
 		@player.frame(ft)
-		@playerLight.setPosition(@player.x, @player.y)
+		@playerLight.setPosition(@player.loc[0], @player.loc[1])
 
 		if @map.isVisible(@player, @lights)
 			@playerLight.setColor(1, 0, 0)

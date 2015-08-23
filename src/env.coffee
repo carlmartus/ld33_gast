@@ -1,13 +1,18 @@
+ENT_RADIUS = 0.1
+
 class Entity
 	constructor: (@map) ->
-		@x = 0.0
-		@y = 0.0
+		@loc = esVec2_create()
+		@dir = esVec2_create()
 
-	setPosition: (@x, @y) ->
+	setPosition: (x, y) ->
+		@loc[0] = x
+		@loc[1] = y
 
 	move: (dx, dy) ->
-		@x += dx
-		@y += dy
+		@dir[0] = dx
+		@dir[1] = dy
+		@map.moveInWord(@loc, @dir)
 
 	render: -> console.log('Unimplemented', @)
 	frame: (ft) -> console.log('Unimplemented', @)
@@ -36,10 +41,10 @@ class Player extends Entity
 		mat = esMat4_create()
 		ratio = w / h
 
-		x0 = @x - ratio*radius
-		x1 = @x + ratio*radius
-		y0 = @y + radius
-		y1 = @y - radius
+		x0 = @loc[0] - ratio*radius
+		x1 = @loc[0] + ratio*radius
+		y0 = @loc[1] + radius
+		y1 = @loc[1] - radius
 		esMat4_ortho(mat, x0, y0, x1 ,y1)
 		return mat
 
