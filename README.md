@@ -1,5 +1,7 @@
 # Gast busters
+[![Build Status](https://travis-ci.org/carlmartus/ld33_gast.svg?branch=master)](https://travis-ci.org/carlmartus/ld33_gast)
 
+Entry for the [Ludum dare](http://ldjam.com/) 48 hour *compo* game jam.
 
 ## Click here to [play](http://martus.se/ld33/gast/)
 
